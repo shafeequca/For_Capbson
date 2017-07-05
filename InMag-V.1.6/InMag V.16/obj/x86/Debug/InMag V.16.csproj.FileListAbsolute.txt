@@ -1,0 +1,87 @@
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\bin\Debug\InMag V.16.exe
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\bin\Debug\InMag V.16.pdb
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmCustomerMaster.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmCustomerPayment.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmMultipleBillPayments.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmPartyMaster.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmPartyPayments.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmProduction.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmPurchase.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmPurchaseReturn.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmSaleReturn.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmSales.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.Properties.Resources.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag V.16.csproj.GenerateResource.Cache
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag V.16.exe
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag V.16.pdb
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmArea.resources
+C:\Users\shafee\Documents\Visual Studio 2010\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmItemMaster.resources
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptBill.rpt
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptOrderSheet.rpt
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptSaleSheet.rpt
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptStock.rpt
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptBill.cs
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptOrderSheet.cs
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptSaleSheet.cs
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\Reports\rptStock.cs
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\InMag.exe.config
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\InMag.exe.manifest
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\InMag.application
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\InMag.exe
+G:\Projects\InMag V.16\InMag V.16\bin\Debug\InMag.pdb
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\ResolveAssemblyReference.cache
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmArea.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmCustomerMaster.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmItemMaster.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmLogin.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmMenu.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmOrderedItems.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmPartyMaster.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmAddStock.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmSales.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmSaleSheet.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmStaffRegistration.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmStockView.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.Properties.Resources.resources
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\GenerateResource-ResGen.read.1.tlog
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\GenerateResource-ResGen.write.1.tlog
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag.exe.manifest
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag.application
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag.exe
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag.pdb
+G:\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag_V._16.frmCashEntry.resources
+G:\SHAFEEQU\Projects\InMag V.16\InMag V.16\bin\Debug\InMag.exe.config
+G:\SHAFEEQU\Projects\InMag V.16\InMag V.16\obj\x86\Debug\InMag.exe
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\InMag.exe.config
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag.exe
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptBill.rpt
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptOrderSheet.rpt
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptSaleSheet.rpt
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptStock.rpt
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptBill.cs
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptOrderSheet.cs
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptSaleSheet.cs
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\Reports\rptStock.cs
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\InMag.exe.manifest
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\InMag.application
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\InMag.exe
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\bin\Debug\InMag.pdb
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag V.16.csprojResolveAssemblyReference.cache
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmCashEntry.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmArea.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmCustomerMaster.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmItemMaster.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmLogin.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmMenu.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmOrderedItems.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmPartyMaster.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmAddStock.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmSales.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmSaleSheet.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmStaffRegistration.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.frmStockView.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag_V._16.Properties.Resources.resources
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag V.16.csproj.GenerateResource.Cache
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag.exe.manifest
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag.application
+G:\SHAFEEQU\Projects\InMag For Shop\InMag-V.1.6\InMag V.16\obj\x86\Debug\InMag.pdb
