@@ -15,13 +15,11 @@ namespace InMag_V._16
         {
             InitializeComponent();
             this.txtCustomer.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCustomer_KeyDown);
-            this.txtTin.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTin_KeyDown);
-            this.txtCST.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCst_KeyDown);
-            this.txtPlace.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPlace_KeyDown);
-            this.txtPhone.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPhone_KeyDown);
-            this.cboArea.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cboArea_KeyDown);
-            this.txtBalance.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtBalance_KeyDown);
-            this.txtBalance.KeyPress += new KeyPressEventHandler(this.NumberOnly_KeyPress);
+            this.txtAddress.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtTin_KeyDown);
+            this.txtGST.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtCst_KeyDown);
+            this.txtState.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPlace_KeyDown);
+            this.txtStateCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtstatecode_KeyDown);
+          
 
         }
         private void NumberOnly_KeyPress(object sender, KeyPressEventArgs e)
@@ -31,34 +29,20 @@ namespace InMag_V._16
         }
         private void frmCustomerMaster_Load(object sender, EventArgs e)
         {
-            comboLoad();
             GridShow();
         }
-        private void comboLoad()
-        {
-            string query = "select areaId,Area from tblArea order By Area";
-            cboArea.DataSource = Connections.Instance.ShowDataInGridView(query);
-            cboArea.DisplayMember = "Area";
-            cboArea.ValueMember = "areaId";
-
-        }
+        
         private void GridShow()
         {
             try
             {
-                string query = "select cus.*,ar.Area from tblCustomer cus, tblArea ar where cus.areaId=ar.areaId and cus.Customer like '" + txtSearch.Text.Trim() + "%'  order by cus.areaId,cus.Customer";
+                string query = "select * from tblCustomer where Customer like '" + txtSearch.Text.Trim() + "%'  order by Customer";
                 dataGridView1.DataSource = Connections.Instance.ShowDataInGridView(query);
                 dataGridView1.Columns[0].Visible = false;
                 dataGridView1.Columns[2].Visible = false;
                 dataGridView1.Columns[3].Visible = false;
-                dataGridView1.Columns[4].Width = 50;
-                dataGridView1.Columns[5].Visible = false;
                 dataGridView1.Columns[6].Visible = false;
-                dataGridView1.Columns[7].Width = 40;
-                dataGridView1.Columns[8].Visible = false;
-                dataGridView1.Columns[9].Visible = false;
-                dataGridView1.Columns[10].Visible = false;
-                dataGridView1.Columns[11].Width = 80;
+               
 
             }
             catch { }
@@ -68,15 +52,14 @@ namespace InMag_V._16
         private void btnClear_Click(object sender, EventArgs e)
         {
             lblID.Text = "";
-            txtBalance.Text = "";
-            txtCST.Text = "";
+            
+            txtGST.Text = "";
             txtCustomer.Text = "";
-            txtNotes.Text = "";
-            txtPhone.Text = "";
-            txtPlace.Text = "";
+         
+            txtStateCode.Text = "";
+            txtState.Text = "";
             txtSearch.Text = "";
-            txtTin.Text = "";
-            cboArea.SelectedIndex = 0;
+            txtAddress.Text = "";
             txtCustomer.Focus();
         }
 
@@ -102,14 +85,17 @@ namespace InMag_V._16
             if (lblID.Text.Trim() == "")
             {
                 //Insert
-                if (txtCustomer.Text.Trim() == "" || txtPlace.Text == "" || txtBalance.Text == "")
-                    MessageBox.Show("Please enter the data");
+                if (txtCustomer.Text.Trim() == "")
+                {
+                    MessageBox.Show("Please enter the customer name");
+                    txtCustomer.Focus();
+                }
                 else
                 {
                     DialogResult dialogResult = MessageBox.Show("Do you want to save?", "Customer Master", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        string query = "insert into tblCustomer values('" + txtCustomer.Text.Trim() + "','" + txtTin.Text.Trim() + "','" + txtCST.Text.Trim() + "','" + txtPlace.Text.Trim() + "','" + txtPhone.Text.Trim() + "','" + cboArea.SelectedValue + "','" + Convert.ToDouble(txtBalance.Text) + "','" + txtNotes.Text.Trim() + "',0,'false')";
+                        string query = "insert into tblCustomer values('" + txtCustomer.Text.Trim() + "','" + txtAddress.Text.Trim() + "','" + txtGST.Text.Trim() + "','" + txtState.Text.Trim() + "','" + txtStateCode.Text.Trim() + "',0)";
                         Connections.Instance.ExecuteQueries(query);
                         GridShow();
                         btnClear_Click(null, null);
@@ -126,7 +112,7 @@ namespace InMag_V._16
                     DialogResult dialogResult = MessageBox.Show("Do you want to save?", "Customer Master", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        string query = "update tblCustomer set Customer='" + txtCustomer.Text.Trim() + "',Tin='" + txtTin.Text.Trim() + "',CST='" + txtCST.Text.Trim() + "',Place='" + txtPlace.Text.Trim() + "',Phone='" + txtPhone.Text.Trim() + "',areaId='" + cboArea.SelectedValue + "',creditBal='" + Convert.ToDouble(txtBalance.Text) + "',Notes='" + txtNotes.Text.Trim() + "' where custId='" + lblID.Text.Trim() + "'";
+                        string query = "update tblCustomer set Customer='" + txtCustomer.Text.Trim() + "',Address='" + txtAddress.Text.Trim() + "',GST='" + txtGST.Text.Trim() + "',state='" + txtState.Text.Trim() + "',state_code='" + txtStateCode.Text.Trim() + "' where custId='" + lblID.Text.Trim() + "'";
                         Connections.Instance.ExecuteQueries(query);
                         GridShow();
                         btnClear_Click(null, null);
@@ -141,13 +127,10 @@ namespace InMag_V._16
             {
                 lblID.Text = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
                 txtCustomer.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
-                txtTin.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-                txtCST.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
-                txtPlace.Text = dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString();
-                txtPhone.Text = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
-                cboArea.SelectedValue = dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString(); 
-                txtBalance.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
-                txtNotes.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
+                txtAddress.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
+                txtGST.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
+                txtState.Text = dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString();
+                txtStateCode.Text = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
             }
         }
 
@@ -159,51 +142,39 @@ namespace InMag_V._16
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtTin.Focus();
+                txtAddress.Focus();
             }
         }
         private void txtTin_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtCST.Focus();
+                txtGST.Focus();
             }
         }
         private void txtCst_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtPlace.Focus();
+                txtState.Focus();
             }
         }
         private void txtPlace_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtPhone.Focus();
+                txtStateCode.Focus();
             }
         }
-        private void txtPhone_KeyDown(object sender, KeyEventArgs e)
+        private void txtstatecode_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
-                cboArea.Focus();
+                btnSave_Click(null, null);
             }
         }
-        private void cboArea_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                txtBalance.Focus();
-            }
-        }
-        private void txtBalance_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                txtNotes.Focus();
-            }
-        }
+        
+       
         
         private void txtCustomer_TextChanged(object sender, EventArgs e)
         {
