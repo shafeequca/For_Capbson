@@ -17,13 +17,9 @@ namespace InMag_V._16
         public frmSales()
         {
             InitializeComponent();
-            this.cboArea.SelectionChangeCommitted += new System.EventHandler(this.cboArea_SelectionChangeCommitted);
-            this.cboAreaSearch.SelectionChangeCommitted += new System.EventHandler(this.cboAreaSearch_SelectionChangeCommitted);
 
             this.ItemDisplayGrid.KeyDown += new System.Windows.Forms.KeyEventHandler(this.ItemDisplayGrid_KeyDown);
             this.cboCustomer.SelectionChangeCommitted += new System.EventHandler(this.cboCustomer_SelectionChangeCommitted);
-            this.cboArea.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cboArea_KeyDown);
-            this.cboAreaSearch.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cboAreaSearch_KeyDown);
             this.cboCustomer.KeyDown += new System.Windows.Forms.KeyEventHandler(this.cboCustomer_KeyDown);
             this.txtItemcode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtItemcode_KeyDown);
             this.txtQuantity.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtQuantity_KeyDown);
@@ -31,13 +27,14 @@ namespace InMag_V._16
             this.txtRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtRate_KeyDown);
             this.txtRate.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
             this.txtItems.KeyPress += new KeyPressEventHandler(txtItems_KeyPress);
-            this.txtCash.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
+            this.txtCGST.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
             this.txtQuantity.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
-            this.txtDiscount.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
-            this.txtCBalance.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
+            this.txtSGST.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
+            this.txtCGSTPer.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
+            this.txtIGST.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
+            this.txtSGSTPer.KeyPress += new KeyPressEventHandler(NumberOnly_KeyPress);
             this.contextMenuStrip1.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.Edit_Click);
 
-            this.cboAreaSearch.KeyPress += new KeyPressEventHandler(Search_KeyPress);
             this.txtBillNoSearch.KeyPress += new KeyPressEventHandler(Search_KeyPress);
             this.cboCustomerSearch.KeyPress += new KeyPressEventHandler(Search_KeyPress);
             this.DtFrom.KeyPress += new KeyPressEventHandler(Search_KeyPress);
@@ -60,7 +57,7 @@ namespace InMag_V._16
             if (e.KeyChar == 13)
             {
                 if (tb.Name == "txtCash")
-                    txtDiscount.Focus();
+                    txtSGST.Focus();
                 else if (tb.Name == "txtDiscount")
                     btnSave_Click(null, null);
                 else if (tb.Name == "txtItems")
@@ -75,6 +72,7 @@ namespace InMag_V._16
             txtItemcode.Tag = null;
             SetBillNo();
             SearchGridLoad();
+            itemView.Visible = false;
         }
         private void SetBillNo()
         {
@@ -82,7 +80,10 @@ namespace InMag_V._16
             Connections.Instance.ExecuteQueries(query);
             query = "select billno from tblSettings";
             DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
-            txtBillno.Text = (Convert.ToInt32(dt.Rows[0][0].ToString()) + 1).ToString();
+            if (dt.Rows.Count > 0)
+                txtBillno.Text = (Convert.ToInt32(dt.Rows[0][0].ToString()) + 1).ToString();
+            else
+                txtBillno.Text = "1";
         
         }
         private void SearchGridLoad()
@@ -98,11 +99,9 @@ namespace InMag_V._16
                 string condition = "(s.BillDate>='" + DtFrom.Value.ToString("dd-MMM-yyyy") + "' and s.BillDate<='" + DtTo.Value.ToString("dd-MMM-yyyy") + "') " + chCondition;
                 if (txtBillNoSearch.Text.Trim() != "")
                     condition = "s.BillNo='" + txtBillNoSearch.Text + "'";
-                else if (cboAreaSearch.SelectedIndex != -1 && cboAreaSearch.Text != "" && cboCustomerSearch.SelectedIndex != -1 && cboCustomerSearch.Text !="")
-                    condition = "(s.BillDate>='" + DtFrom.Value.ToString("dd-MMM-yyyy") + "' and s.BillDate<='" + DtTo.Value.ToString("dd-MMM-yyyy") + "' and s.areaId='" + cboAreaSearch.SelectedValue + "' and s.custId='" + cboCustomerSearch.SelectedValue + "') " + chCondition;
-                else if (cboAreaSearch.SelectedIndex != -1 && cboAreaSearch.Text != "")
-                    condition = "(s.BillDate>='" + DtFrom.Value.ToString("dd-MMM-yyyy") + "' and s.BillDate<='" + DtTo.Value.ToString("dd-MMM-yyyy") + "' and s.areaId='" + cboAreaSearch.SelectedValue + "') " + chCondition;
-                string query = "select s.saleId,s.BillNo as Bill_No,CONVERT(VARCHAR(11),s.BillDate,106) as Bill_Date,c.Customer,s.areaId,s.custId,s.CBalance,s.GrandTotal as Bill_Amount,s.Cash,s.Discount,s.Balance from tblSales s,tblCustomer c where s.custId=c.Custid  and " + condition;
+                else if (cboCustomerSearch.SelectedIndex != -1 && cboCustomerSearch.Text !="")
+                    condition = "(s.BillDate>='" + DtFrom.Value.ToString("dd-MMM-yyyy") + "' and s.BillDate<='" + DtTo.Value.ToString("dd-MMM-yyyy") + "' and s.custId='" + cboCustomerSearch.SelectedValue + "') " + chCondition;
+                string query = "select s.saleId,s.BillNo as Bill_No,CONVERT(VARCHAR(11),s.BillDate,106) as Bill_Date,c.Customer,s.custId,s.BillTotal,s.CGSTPer,s.CGST,s.SGSTPer,s.SGST,s.IGSTPer,s.IGST,s.GrandTotal from tblSales s,tblCustomer c where s.custId=c.Custid  and " + condition;
                 SearchGrid.DataSource = Connections.Instance.ShowDataInGridView(query);
                 SearchGrid.Columns[0].Visible = false;
                 SearchGrid.Columns[1].Width = 60;
@@ -112,11 +111,13 @@ namespace InMag_V._16
                 SearchGrid.Columns[4].Visible = false;
                 SearchGrid.Columns[5].Visible = false;
                 SearchGrid.Columns[6].Visible = false;
-                SearchGrid.Columns[7].Width = 88;
-                SearchGrid.Columns[7].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
+                SearchGrid.Columns[7].Visible = false;
                 SearchGrid.Columns[8].Visible = false;
                 SearchGrid.Columns[9].Visible = false;
                 SearchGrid.Columns[10].Visible = false;
+                SearchGrid.Columns[11].Visible = false;
+                SearchGrid.Columns[12].Visible = false;
+                SearchGrid.Columns[13].Visible = false;
             }
             catch { }
         }
@@ -124,95 +125,43 @@ namespace InMag_V._16
         {
             try
             {
-                itemView.Visible = false;
-                string query = "select areaId,Area from tblArea order By Area";
-                cboArea.DataSource = Connections.Instance.ShowDataInGridView(query);
-                cboArea.DisplayMember = "Area";
-                cboArea.ValueMember = "areaId";
-                cboArea.SelectedIndex = -1;
-                cboArea.Text = "";
+                string query = "select custId,Customer from tblCustomer order by Customer";
+                cboCustomer.DataSource = Connections.Instance.ShowDataInGridView(query);
+                cboCustomer.DisplayMember = "Customer";
+                cboCustomer.ValueMember = "custId";
+                cboCustomer.Text = "";
+                cboCustomer.SelectedIndex = -1;
 
-                cboAreaSearch.DataSource = Connections.Instance.ShowDataInGridView(query);
-                cboAreaSearch.DisplayMember = "Area";
-                cboAreaSearch.ValueMember = "areaId";
-                cboAreaSearch.SelectedIndex = -1;
-                cboAreaSearch.Text = "";
-
-                //query = "select itemId,Item_Name from tblItem order By Item_Name";
-                //cboItems.DataSource = Connections.Instance.ShowDataInGridView(query);
-                //cboItems.DisplayMember = "Item_Name";
-                //cboItems.ValueMember = "itemId";
-                //cboItems.SelectedIndex = -1;
-                //cboItems.Text = "";
-            }
-            catch { }
-        }
-
-        private void cboAreaSearch_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (cboAreaSearch.SelectedValue != null && cboAreaSearch.Text !="")
-            {
-                System.Data.DataRowView DR = (System.Data.DataRowView)cboArea.Items[cboAreaSearch.SelectedIndex];
-                string query = "select custId,Customer from tblCustomer where areaId='" + DR.Row[0].ToString() + "' order by Customer";
                 cboCustomerSearch.DataSource = Connections.Instance.ShowDataInGridView(query);
                 cboCustomerSearch.DisplayMember = "Customer";
                 cboCustomerSearch.ValueMember = "custId";
                 cboCustomerSearch.Text = "";
                 cboCustomerSearch.SelectedIndex = -1;
-               
             }
-        }
-        private void cboArea_SelectionChangeCommitted(object sender, EventArgs e)
-        {
-            if (cboArea.SelectedValue != null && cboArea.Text !="")
-            {
-                System.Data.DataRowView DR = (System.Data.DataRowView)cboArea.Items[cboArea.SelectedIndex];
-                string query = "select custId,Customer from tblCustomer where areaId='" + DR.Row[0].ToString() + "' order by Customer";
-                cboCustomer.DataSource = Connections.Instance.ShowDataInGridView(query);
-                cboCustomer.DisplayMember = "Customer";
-                cboCustomer.ValueMember = "custId";
-                cboCustomer.SelectedIndex = -1;
-                cboCustomer.Text = "";
-                txtPlace.Text = "";
-                txtCBalance.Text = "";
-            }
+            catch { }
         }
         private void cboCustomer_SelectionChangeCommitted(object sender, EventArgs e)
         {
             if (cboCustomer.SelectedValue != null && cboCustomer.Text !="")
             {
                 System.Data.DataRowView DR = (System.Data.DataRowView)cboCustomer.Items[cboCustomer.SelectedIndex];
-                string query = "select Place,creditBal from tblCustomer where custId='" + DR.Row[0].ToString() + "'";
+                string query = "select * from tblCustomer where custId='" + DR.Row[0].ToString() + "'";
                 DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
                 if (dt.Rows.Count > 0)
                 {
-                    txtPlace.Text = dt.Rows[0][0].ToString();
-                    txtCBalance.Text = dt.Rows[0][1].ToString();
+                    txtAddress.Text = dt.Rows[0][2].ToString();
+                    txtGST.Text = dt.Rows[0][3].ToString();
+                    txtState.Text = dt.Rows[0][4].ToString();
+                    txtStateCode.Text = dt.Rows[0][5].ToString();
+
                 }
             }
         }
         
         
-        private void cboAreaSearch_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                cboAreaSearch_SelectionChangeCommitted(null, null);
-            }
-        }
+               
         
-        
-        private void cboArea_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            
-            {
-                cboArea_SelectionChangeCommitted(null, null);
-                cboCustomer.Focus();
-
-            }
-        }
-
+       
         private void cboCustomer_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
@@ -293,7 +242,7 @@ namespace InMag_V._16
                 query = "select sum(total) from tblTemp";
                 DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
                 if (dt.Rows.Count > 0)
-                    txtGrand.Text = dt.Rows[0][0].ToString();
+                    txtBillTotal.Text = dt.Rows[0][0].ToString();
             }
             catch { }
         }
@@ -442,21 +391,21 @@ namespace InMag_V._16
             }
         }
 
-        private void txtCash_TextChanged(object sender, EventArgs e)
-        {
-            Calculation();
-        }
+        
         private void Calculation()
         {
-            if (txtCBalance.Text == "")
-                txtCBalance.Text = "0";
-            if (txtGrand.Text == "")
-                txtGrand.Text = "0";
-            if (txtCash.Text == "")
-                txtCash.Text = "0";
-            if (txtDiscount.Text == "")
-                txtDiscount.Text = "0";
-            txtBalance.Text = ((Convert.ToDouble(txtCBalance.Text) + Convert.ToDouble(txtGrand.Text)) - Convert.ToDouble(txtCash.Text) - Convert.ToDouble(txtDiscount.Text)).ToString();
+            if (txtCGSTPer.Text == "")
+                txtCGSTPer.Text = "0";
+            if (txtBillTotal.Text == "")
+                txtBillTotal.Text = "0";
+            if (txtIGSTPer.Text == "")
+                txtIGSTPer.Text = "0";
+            if (txtSGSTPer.Text == "")
+                txtSGSTPer.Text = "0";
+            txtCGST.Text = (Convert.ToDouble(txtBillTotal.Text) * (Convert.ToDouble(txtCGSTPer.Text) / 100)).ToString();
+            txtSGST.Text = (Convert.ToDouble(txtBillTotal.Text) * (Convert.ToDouble(txtSGSTPer.Text) / 100)).ToString();
+            txtIGST.Text = (Convert.ToDouble(txtBillTotal.Text) * (Convert.ToDouble(txtIGSTPer.Text) / 100)).ToString();
+            txtGrandTotal.Text = (Convert.ToDouble(txtBillTotal.Text) + Convert.ToDouble(txtCGST.Text) + Convert.ToDouble(txtSGST.Text) + Convert.ToDouble(txtIGST.Text)).ToString();
         }
 
         private void txtDiscount_TextChanged(object sender, EventArgs e)
@@ -498,24 +447,23 @@ namespace InMag_V._16
         private void btnClear_Click(object sender, EventArgs e)
         {
             txtBillno.Tag = null;
-            cboArea.Enabled = true;
+            
             cboCustomer.Enabled = true;
-            txtPlace.Text = "";
-            txtCBalance.Text = "";
+            txtAddress.Text = "";
+            txtSGSTPer.Text = "0";
             cmdItemClear_Click(null, null);
             ItemGrid.DataSource = null;
-            txtGrand.Text = "";
-            txtCash.Text = "";
-            txtDiscount.Text ="";
-            txtBalance.Text = "0";
+            txtBillTotal.Text = "0";
+            txtCGSTPer.Text = "0";
+            txtIGSTPer.Text = "0";
+            txtState.Text = "";
+            txtStateCode.Text = "";
+            txtGST.Text = "";
             SetBillNo();
             cboCustomer.SelectedIndex = -1;
             cboCustomer.Text = "";
-            //SearchGridLoad();
-            //if(!(cboAreaSearch.SelectedIndex>=0 || txtBillNoSearch.Text.Trim()!="" || cboCustomerSearch.SelectedIndex>=0))
-            //    btnReset_Click(null, null);
-            //else if(cboAreaSearch.SelectedIndex>=0 && cboAreaSearch.SelectedIndex==cboArea.SelectedIndex)
-                btnReset_Click(null, null);
+            btnReset_Click(null, null);
+            btnSearch_Click(null,null);
             cboCustomer.Focus();
         }
 
@@ -526,33 +474,35 @@ namespace InMag_V._16
 
         private void btnReset_Click(object sender, EventArgs e)
         {
-            cboAreaSearch.SelectedValue = -1;
             cboCustomerSearch.SelectedValue = -1;
             DtFrom.Value = DateTime.Today;
             DtTo.Value = DateTime.Today;
             txtBillNoSearch.Text = "";
             SearchGridLoad();
-            cboAreaSearch.Focus();
+            cboCustomer.Focus();
         }
 
         private void SearchGrid_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
-            { 
+            {
+                //string query = "BillTotal,s.CGSTPer,s.CGST,s.SGSTPer,s.SGST,s.IGSTPer,s.IGST,s.GrandTotal from tblSales s,tblCustomer c where s.custId=c.Custid  and " + condition;
+
                 txtBillno.Tag = SearchGrid.Rows[e.RowIndex].Cells[0].Value.ToString();
                 txtBillno.Text = SearchGrid.Rows[e.RowIndex].Cells[1].Value.ToString();
                 DatePicker.Value = Convert.ToDateTime(SearchGrid.Rows[e.RowIndex].Cells[2].Value);
-                cboArea.SelectedValue = SearchGrid.Rows[e.RowIndex].Cells[4].Value.ToString();
-                cboArea_SelectionChangeCommitted(null, null);
-                cboCustomer.SelectedValue = SearchGrid.Rows[e.RowIndex].Cells[5].Value.ToString();
+                cboCustomer.SelectedValue = SearchGrid.Rows[e.RowIndex].Cells[4].Value.ToString();
                 cboCustomer_SelectionChangeCommitted(null, null);
                 cboCustomer.Text = SearchGrid.Rows[e.RowIndex].Cells[3].Value.ToString();
-                txtCBalance.Text = SearchGrid.Rows[e.RowIndex].Cells[6].Value.ToString();
-                txtGrand.Text = SearchGrid.Rows[e.RowIndex].Cells[7].Value.ToString();
-                txtCash.Text = SearchGrid.Rows[e.RowIndex].Cells[8].Value.ToString();
-                txtDiscount.Text = SearchGrid.Rows[e.RowIndex].Cells[9].Value.ToString();
-                txtBalance.Text = SearchGrid.Rows[e.RowIndex].Cells[10].Value.ToString();
-                cboArea.Enabled = false;
+                txtBillTotal.Text = SearchGrid.Rows[e.RowIndex].Cells[5].Value.ToString();
+                txtCGSTPer.Text = SearchGrid.Rows[e.RowIndex].Cells[6].Value.ToString();
+                txtCGST.Text = SearchGrid.Rows[e.RowIndex].Cells[7].Value.ToString();
+                txtSGSTPer.Text = SearchGrid.Rows[e.RowIndex].Cells[8].Value.ToString();
+                txtSGST.Text = SearchGrid.Rows[e.RowIndex].Cells[9].Value.ToString();
+                txtIGSTPer.Text = SearchGrid.Rows[e.RowIndex].Cells[10].Value.ToString();
+                txtIGST.Text = SearchGrid.Rows[e.RowIndex].Cells[11].Value.ToString();
+                txtGrandTotal.Text = SearchGrid.Rows[e.RowIndex].Cells[12].Value.ToString();
+
                 cboCustomer.Enabled = false;
                 string query = "truncate table tblTemp";
                 Connections.Instance.ExecuteQueries(query);
@@ -563,113 +513,109 @@ namespace InMag_V._16
         }
         private void btnSave_Click(object sender, EventArgs e)
         {
-            if (cboArea.SelectedIndex == -1 || cboCustomer.SelectedIndex == -1 || txtBillno.Text == "")
+            if (cboCustomer.SelectedIndex == -1 || txtBillno.Text == "")
+            {
                 MessageBox.Show("Please enter the data");
+                cboCustomer.Focus();
+            }
             else
             {
                 //if (ItemGrid.Rows.Count == 0)
                 //    MessageBox.Show("Please add items");
                 //else
                 //{
-                    DialogResult dialogResult = MessageBox.Show("Do you want to save this bill?", "Sale Voucher", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show("Do you want to save this bill?", "Sale Voucher", MessageBoxButtons.YesNo);
+                if (dialogResult == DialogResult.Yes)
+                {
+                    string query = "";
+                    if (txtBillno.Tag == null)
+                    {
+                        query = "insert into tblSales values('" + txtBillno.Text + "','" + DatePicker.Value.ToString("dd-MMM-yyyy") + "','" + cboCustomer.SelectedValue + "','" + Convert.ToDouble(txtBillTotal.Text) + "','" + Convert.ToDouble(txtCGSTPer.Text) + "','" + Convert.ToDouble(txtCGST.Text) + "','" + Convert.ToDouble(txtSGSTPer.Text) + "','" + Convert.ToDouble(txtSGST.Text) + "','" + Convert.ToDouble(txtIGSTPer.Text) + "','" + Convert.ToDouble(txtIGST.Text) + "','" + Convert.ToDouble(txtGrandTotal.Text) + "','" + Convert.ToDouble(txtGrandTotal.Text) + "')";
+                        Connections.Instance.ExecuteQueries(query);
+                        query = "select ident_current('tblSales')";
+                        DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
+                        int id = Convert.ToInt32(dt.Rows[0][0].ToString());
+                        for (int i = 0; i < ItemGrid.Rows.Count; i++)
+                        {
+                            query = "insert into tblSaleTrans values('" + id + "','" + ItemGrid.Rows[i].Cells[2].Value + "','" + ItemGrid.Rows[i].Cells[4].Value + "','" + ItemGrid.Rows[i].Cells[5].Value + "','" + ItemGrid.Rows[i].Cells[6].Value + "','false')";
+                            Connections.Instance.ExecuteQueries(query);
+                            query = "update tblItem set Current_Stock=Current_Stock-'" + ItemGrid.Rows[i].Cells[4].Value + "' where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
+                            Connections.Instance.ExecuteQueries(query);
+                        }
+                        query = "update tblSettings set BillNo=BillNo+1";
+                        Connections.Instance.ExecuteQueries(query);
+
+                    }
+                    else
+                    {
+                        //update
+                        query = "update tblSales set BillDate='" + DatePicker.Value.ToString("dd-MMM-yyyy") + "',GrandTotal='" + Convert.ToDouble(txtGrandTotal.Text) + "',Cash='" + Convert.ToDouble(txtGrandTotal.Text) + "',BillTotal='" + Convert.ToDouble(txtBillTotal.Text) + "',CGSTPer='" + Convert.ToDouble(txtCGSTPer.Text) + "',CGST='" + Convert.ToDouble(txtCGST.Text) + "',SGSTPer='" + Convert.ToDouble(txtSGSTPer.Text) + "',SGST='" + Convert.ToDouble(txtSGST.Text) + "',IGSTPer='" + Convert.ToDouble(txtIGSTPer.Text) + "',IGST='" + Convert.ToDouble(txtIGST.Text) + "'  where saleId='" + txtBillno.Tag.ToString() + "'";
+                        Connections.Instance.ExecuteQueries(query);
+                        query = "select itemId,qty from tblSaletrans where saleId='" + txtBillno.Tag.ToString() + "'";
+                       
+                        DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
+                        for (int i = 0; i < dt.Rows.Count; i++)
+                        {
+                            query = "update tblItem set Current_Stock=Current_Stock+'" + Convert.ToDouble(dt.Rows[i][1].ToString()) + "' where itemId='" + dt.Rows[i][0].ToString() + "'";
+                            Connections.Instance.ExecuteQueries(query);
+                        }
+                        query = "delete from tblSaletrans where saleId='" + txtBillno.Tag.ToString() + "'";
+                        Connections.Instance.ExecuteQueries(query);
+                        for (int i = 0; i < ItemGrid.Rows.Count; i++)
+                        {
+                            query = "insert into tblSaleTrans values('" + txtBillno.Tag.ToString() + "','" + ItemGrid.Rows[i].Cells[2].Value + "','" + ItemGrid.Rows[i].Cells[4].Value + "','" + ItemGrid.Rows[i].Cells[5].Value + "','" + ItemGrid.Rows[i].Cells[6].Value + "','false')";
+                            Connections.Instance.ExecuteQueries(query);
+                            query = "update tblItem set Current_Stock=Current_Stock-'" + ItemGrid.Rows[i].Cells[4].Value + "' where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
+                            Connections.Instance.ExecuteQueries(query);
+                        }
+
+                    }
+                    dialogResult = MessageBox.Show("Do you want to print this bill?", "Sale Voucher", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        string query = "";
-                        if (txtBillno.Tag == null)
-                        {
-                            query = "insert into tblSales values('" + txtBillno.Text + "','" + DatePicker.Value.ToString("dd-MMM-yyyy") + "','" + cboArea.SelectedValue + "','" + cboCustomer.SelectedValue + "','" + Convert.ToDouble(txtCBalance.Text) + "','" + Convert.ToDouble(txtGrand.Text) + "','" + Convert.ToDouble(txtCash.Text) + "','" + Convert.ToDouble(txtDiscount.Text) + "','" + Convert.ToDouble(txtBalance.Text) + "','false')";
-                            Connections.Instance.ExecuteQueries(query);
-                            query = "select ident_current('tblSales')";
-                            DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
-                            int id = Convert.ToInt32(dt.Rows[0][0].ToString());
-                            query = "update tblCustomer set creditBal='" + Convert.ToDouble(txtBalance.Text) + "' where custId='" + cboCustomer.SelectedValue + "'";
-                            Connections.Instance.ExecuteQueries(query);
-                            for (int i = 0; i < ItemGrid.Rows.Count; i++)
-                            {
-                                query = "insert into tblSaleTrans values('" + id + "','" + ItemGrid.Rows[i].Cells[2].Value + "','" + ItemGrid.Rows[i].Cells[4].Value + "','" + ItemGrid.Rows[i].Cells[5].Value + "','" + ItemGrid.Rows[i].Cells[6].Value + "','false')";
-                                Connections.Instance.ExecuteQueries(query);
-                                query = "update tblItem set Current_Stock=Current_Stock-'" + ItemGrid.Rows[i].Cells[4].Value + "' where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
-                                Connections.Instance.ExecuteQueries(query);
-                            }
-                            query = "update tblSettings set BillNo='" + id + "'";
-                            Connections.Instance.ExecuteQueries(query);
-                            
-                        }
-                        else
-                        { 
-                        //update
-                            query = "select custId,Balance from tblSales where saleId='" + txtBillno.Tag.ToString() + "'";
-                            DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
-                            double newBal = Convert.ToDouble(dt.Rows[0][1].ToString()) - Convert.ToDouble(txtBalance.Text);//exbalance-balance
-                            query = "update tblCustomer set creditBal=creditBal-'" + newBal + "' where custId='" + dt.Rows[0][0].ToString() + "'";
-                            Connections.Instance.ExecuteQueries(query);
-                            query = "update tblSales set BillDate='" + DatePicker.Value.ToString("dd-MMM-yyyy") + "',GrandTotal='" + txtGrand.Text + "',Cash='" + Convert.ToDouble(txtCash.Text) + "',Discount='" + Convert.ToDouble(txtDiscount.Text) + "',Balance='" + Convert.ToDouble(txtBalance.Text) + "'  where saleId='" + txtBillno.Tag.ToString() + "'";
-                            Connections.Instance.ExecuteQueries(query);
-                            query = "select itemId,qty from tblSaletrans where saleId='" + txtBillno.Tag.ToString() + "'";
-                            dt.Rows.Clear();
-                            dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
-                            for (int i = 0; i < dt.Rows.Count; i++)
-                            {
-                                query = "update tblItem set Current_Stock=Current_Stock+'" + Convert.ToDouble(dt.Rows[i][1].ToString()) + "' where itemId='" + dt.Rows[i][0].ToString() + "'";
-                                Connections.Instance.ExecuteQueries(query);
-                            }
-                            query = "delete from tblSaletrans where saleId='" + txtBillno.Tag.ToString() + "'";
-                            Connections.Instance.ExecuteQueries(query);
-                            for (int i = 0; i < ItemGrid.Rows.Count; i++)
-                            {
-                                query = "insert into tblSaleTrans values('" + txtBillno.Tag.ToString() + "','" + ItemGrid.Rows[i].Cells[2].Value + "','" + ItemGrid.Rows[i].Cells[4].Value + "','" + ItemGrid.Rows[i].Cells[5].Value + "','" + ItemGrid.Rows[i].Cells[6].Value + "','false')";
-                                Connections.Instance.ExecuteQueries(query);
-                                query = "update tblItem set Current_Stock=Current_Stock-'" + ItemGrid.Rows[i].Cells[4].Value + "' where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
-                                Connections.Instance.ExecuteQueries(query);
-                            }
+                        //string query1 = "select i.inMalayalam as ItemsInMalayalam,t.ItemName as Items,t.Qty as Qty,t.Rate as Rate,t.Total as Total from tblTemp t,tblItem i where t.ItemId=i.ItemId";
+                        //System.Data.DataColumn BillNo = new System.Data.DataColumn("BillNo", typeof(System.String));
+                        //BillNo.DefaultValue = txtBillno.Text;
+                        //System.Data.DataColumn BillDate = new System.Data.DataColumn("BillDate", typeof(System.String));
+                        //BillDate.DefaultValue = DatePicker.Value.ToString("dd-MMM-yyyy");
+                        //System.Data.DataColumn Customer = new System.Data.DataColumn("Customer", typeof(System.String));
+                        //Customer.DefaultValue = cboCustomer.Text.ToString();
+                        //System.Data.DataColumn GrandTotal = new System.Data.DataColumn("GrandTotal", typeof(System.Decimal));
+                        //GrandTotal.DefaultValue = txtBillTotal.Text;
+                        //System.Data.DataColumn Cash = new System.Data.DataColumn("Cash", typeof(System.Decimal));
+                        //Cash.DefaultValue = txtCGST.Text;
+                        //System.Data.DataColumn Discount = new System.Data.DataColumn("Discount", typeof(System.Decimal));
+                        //Discount.DefaultValue = txtSGST.Text;
+                        //System.Data.DataColumn Balance = new System.Data.DataColumn("Balance", typeof(System.Decimal));
+                        //Balance.DefaultValue = txtIGST.Text;
+                        //System.Data.DataColumn PrevBalance = new System.Data.DataColumn("PrevBalance", typeof(System.Decimal));
+                        //PrevBalance.DefaultValue = txtCGSTPer.Text;
 
-                        }
-                        dialogResult = MessageBox.Show("Do you want to print this bill?", "Sale Voucher", MessageBoxButtons.YesNo);
-                        if (dialogResult == DialogResult.Yes)
-                        {
-                            string query1 = "select i.inMalayalam as ItemsInMalayalam,t.ItemName as Items,t.Qty as Qty,t.Rate as Rate,t.Total as Total from tblTemp t,tblItem i where t.ItemId=i.ItemId";
-                            System.Data.DataColumn BillNo = new System.Data.DataColumn("BillNo", typeof(System.String));
-                            BillNo.DefaultValue = txtBillno.Text;
-                            System.Data.DataColumn BillDate = new System.Data.DataColumn("BillDate", typeof(System.String));
-                            BillDate.DefaultValue = DatePicker.Value.ToString("dd-MMM-yyyy");
-                            System.Data.DataColumn Customer = new System.Data.DataColumn("Customer", typeof(System.String));
-                            Customer.DefaultValue = cboCustomer.Text.ToString();
-                            System.Data.DataColumn GrandTotal = new System.Data.DataColumn("GrandTotal", typeof(System.Decimal));
-                            GrandTotal.DefaultValue = txtGrand.Text;
-                            System.Data.DataColumn Cash = new System.Data.DataColumn("Cash", typeof(System.Decimal));
-                            Cash.DefaultValue = txtCash.Text;
-                            System.Data.DataColumn Discount = new System.Data.DataColumn("Discount", typeof(System.Decimal));
-                            Discount.DefaultValue = txtDiscount.Text;
-                            System.Data.DataColumn Balance = new System.Data.DataColumn("Balance", typeof(System.Decimal));
-                            Balance.DefaultValue = txtBalance.Text;
-                            System.Data.DataColumn PrevBalance = new System.Data.DataColumn("PrevBalance", typeof(System.Decimal));
-                            PrevBalance.DefaultValue = txtCBalance.Text;
+                        //DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query1);
 
-                            DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query1);
+                        //dt.Columns.Add(PrevBalance);
+                        //dt.Columns.Add(Balance);
+                        //dt.Columns.Add(Discount);
 
-                            dt.Columns.Add(PrevBalance);
-                            dt.Columns.Add(Balance);
-                            dt.Columns.Add(Discount);
+                        //dt.Columns.Add(Cash);
+                        //dt.Columns.Add(GrandTotal);
+                        //dt.Columns.Add(Customer);
+                        //dt.Columns.Add(BillDate);
+                        //dt.Columns.Add(BillNo);
+                        //ds.Tables["Bill"].Clear();
+                        //ds.Tables["Bill"].Merge(dt);
 
-                            dt.Columns.Add(Cash);
-                            dt.Columns.Add(GrandTotal);
-                            dt.Columns.Add(Customer);
-                            dt.Columns.Add(BillDate);
-                            dt.Columns.Add(BillNo);
-                            ds.Tables["Bill"].Clear();
-                            ds.Tables["Bill"].Merge(dt);
+                        //ReportDocument cryRpt = new ReportDocument();
+                        //cryRpt.Load(System.IO.Path.GetDirectoryName(Application.ExecutablePath).ToString() + @"\Reports\rptBill.rpt");
+                        //cryRpt.SetDataSource(ds);
+                        //cryRpt.Refresh();
+                        //cryRpt.PrintToPrinter(1, true, 0, 0);
+                    }
 
-                            ReportDocument cryRpt = new ReportDocument();
-                            cryRpt.Load(System.IO.Path.GetDirectoryName(Application.ExecutablePath).ToString() + @"\Reports\rptBill.rpt");
-                            cryRpt.SetDataSource(ds);
-                            cryRpt.Refresh();
-                            cryRpt.PrintToPrinter(1, true, 0, 0);
-                        }
+                    query = "truncate table tblTemp";
+                    Connections.Instance.ExecuteQueries(query);
 
-                            query = "truncate table tblTemp";
-                            Connections.Instance.ExecuteQueries(query);
-                        
-                        btnClear_Click(null, null);
+                    btnClear_Click(null, null);
                     //}
                 }
             }
@@ -683,16 +629,10 @@ namespace InMag_V._16
                 DialogResult dialogResult = MessageBox.Show("Do you want to delete the bill?", "Sale Voucher", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
-                    string query = "select custId,CBalance,Balance from tblSales where saleId='" + txtBillno.Tag.ToString() + "'";
-                    DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
-                    double newBal = Convert.ToDouble(dt.Rows[0][1].ToString()) - Convert.ToDouble(dt.Rows[0][2].ToString());//creditbalance-balance
-                    query = "update tblCustomer set creditBal=creditBal+'" + newBal + "' where custId='" + dt.Rows[0][0].ToString() + "'";
-                    Connections.Instance.ExecuteQueries(query);
-                    query = "delete from tblSales where saleId='" + txtBillno.Tag.ToString() + "'";
+                    string query = "delete from tblSales where saleId='" + txtBillno.Tag.ToString() + "'";
                     Connections.Instance.ExecuteQueries(query);
                     query = "select itemid,qty from tblSaletrans where saleId='" + txtBillno.Tag.ToString() + "'";
-                    dt.Rows.Clear();
-                    dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
+                    DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
                     for (int i = 0; i < dt.Rows.Count; i++)
                     {
                         query = "update tblItem set Current_Stock=Current_Stock+'" + Convert.ToDouble(dt.Rows[i][1].ToString()) + "' where itemId='" + dt.Rows[i][0].ToString() + "'";
@@ -829,6 +769,28 @@ namespace InMag_V._16
                 itemView.Visible = false;
             }
         }
+
+        private void txtCGSTPer_TextChanged(object sender, EventArgs e)
+        {
+            Calculation();
+        }
+
+        private void txtSGSTPer_TextChanged(object sender, EventArgs e)
+        {
+            Calculation();
+        }
+
+        private void txtIGSTPer_TextChanged(object sender, EventArgs e)
+        {
+            Calculation();
+        }
+
+        private void SearchGrid_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
+
+        
 
 
     }

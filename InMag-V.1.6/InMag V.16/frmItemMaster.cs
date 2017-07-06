@@ -15,22 +15,17 @@ namespace InMag_V._16
         public frmItemMaster()
         {
             InitializeComponent();
-            this.txtMalayalam.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMalayalam_KeyDown);
-            this.txtMRP.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMRP_KeyDown);
             this.txtPurchaseRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtPurchaseRate_KeyDown);
-            this.txtReorderLevel.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtReorderLevel_KeyDown);
+            this.txtItemCode.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtItemCode_KeyDown);
+
             this.txtRetailRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtRetailRate_KeyDown);
             this.txtStock.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtStock_KeyDown);
             this.txtWholeSale.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtWholeSale_KeyDown);
-            this.txtMinRate.KeyDown += new System.Windows.Forms.KeyEventHandler(this.txtMinRate_KeyDown);
 
-            this.txtMRP.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
             this.txtPurchaseRate.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
-            this.txtReorderLevel.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
             this.txtRetailRate.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
             this.txtStock.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
             this.txtWholeSale.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
-            this.txtMinRate.KeyPress += new System.Windows.Forms.KeyPressEventHandler(this.NumberOnly_KeyPress);
 
         }
         private void NumberOnly_KeyPress(object sender, KeyPressEventArgs e)
@@ -50,13 +45,12 @@ namespace InMag_V._16
                 lblID.Text = dataGridView1.Rows[e.RowIndex].Cells[0].Value.ToString();
                 txtItemCode.Text = dataGridView1.Rows[e.RowIndex].Cells[1].Value.ToString();
                 txtItem.Text = dataGridView1.Rows[e.RowIndex].Cells[2].Value.ToString();
-                txtMalayalam.Text = dataGridView1.Rows[e.RowIndex].Cells[3].Value.ToString();
-                txtMRP.Text = dataGridView1.Rows[e.RowIndex].Cells[4].Value.ToString();
+                
+                
                 txtRetailRate.Text = dataGridView1.Rows[e.RowIndex].Cells[5].Value.ToString();
                 txtWholeSale.Text = dataGridView1.Rows[e.RowIndex].Cells[6].Value.ToString();
                 txtPurchaseRate.Text = dataGridView1.Rows[e.RowIndex].Cells[7].Value.ToString();
-                txtMinRate.Text = dataGridView1.Rows[e.RowIndex].Cells[8].Value.ToString();
-                txtReorderLevel.Text = dataGridView1.Rows[e.RowIndex].Cells[9].Value.ToString();
+               
                 txtStock.Text = dataGridView1.Rows[e.RowIndex].Cells[11].Value.ToString();
                 txtStock.Enabled = false;
             }
@@ -69,8 +63,9 @@ namespace InMag_V._16
                 dataGridView1.DataSource = Connections.Instance.ShowDataInGridView(query);
                 dataGridView1.Columns[0].Visible = false;
                 dataGridView1.Columns[1].Visible = false;
-                dataGridView1.Columns[2].Width = 100;
+                //dataGridView1.Columns[5].Width = 100;
                 dataGridView1.Columns[3].Visible = false;
+                dataGridView1.Columns[4].Visible = false;
                 dataGridView1.Columns[6].Visible = false;
                 dataGridView1.Columns[7].Visible = false;
                 dataGridView1.Columns[8].Visible = false;
@@ -87,11 +82,11 @@ namespace InMag_V._16
         {
             txtStock.Enabled = true;
             txtItem.Text = "";
-            txtMalayalam.Text = "";
-            txtMinRate.Text = "";
-            txtMRP.Text = "";
+            //txtMalayalam.Text = "";
+            //txtMinRate.Text = "";
+            //txtMRP.Text = "";
             txtPurchaseRate.Text = "";
-            txtReorderLevel.Text = "";
+            //txtReorderLevel.Text = "";
             txtSearch.Text = "";
             txtRetailRate.Text = "";
             txtStock.Text = "";
@@ -109,14 +104,14 @@ namespace InMag_V._16
             if (lblID.Text.Trim() == "")
             {
                 //Insert
-                if (txtItem.Text.Trim() == "" || txtMinRate.Text == "" || txtRetailRate.Text == "" || txtPurchaseRate.Text == "" || txtReorderLevel.Text == "" || txtStock.Text == "" || txtWholeSale.Text == "")
+                if (txtItem.Text.Trim() == "" ||  txtRetailRate.Text == "" || txtPurchaseRate.Text == "" ||  txtStock.Text == "" || txtWholeSale.Text == "")
                     MessageBox.Show("Please enter the data");
                 else
                 {
                     DialogResult dialogResult = MessageBox.Show("Do you want to save?", "Item Master", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        string query = "insert into tblItem values('" + txtItemCode.Text.Trim() + "','" + txtItem.Text.Trim() + "','" + txtMalayalam.Text.Trim() + "','" + Convert.ToDouble(txtMRP.Text.Trim()) + "','" + Convert.ToDouble(txtRetailRate.Text.Trim()) + "','" + Convert.ToDouble(txtWholeSale.Text.Trim()) + "','" + Convert.ToDouble(txtPurchaseRate.Text) + "','" + Convert.ToDouble(txtMinRate.Text) + "','" + Convert.ToDouble(txtReorderLevel.Text.Trim()) + "','" + Convert.ToDouble(txtStock.Text) + "','" + Convert.ToDouble(txtStock.Text) + "','false')";
+                        string query = "insert into tblItem values('" + txtItemCode.Text.Trim() + "','" + txtItem.Text.Trim() + "','','0','" + Convert.ToDouble(txtRetailRate.Text.Trim()) + "','" + Convert.ToDouble(txtWholeSale.Text.Trim()) + "','" + Convert.ToDouble(txtPurchaseRate.Text) + "','0','0','" + Convert.ToDouble(txtStock.Text) + "','" + Convert.ToDouble(txtStock.Text) + "','false')";
                         Connections.Instance.ExecuteQueries(query);
                         GridShow();
                         btnClear_Click(null, null);
@@ -127,14 +122,14 @@ namespace InMag_V._16
             else
             {
                 //Update
-                if (txtItem.Text.Trim() == "" || txtMinRate.Text == "" || txtRetailRate.Text == "" || txtPurchaseRate.Text == "" || txtReorderLevel.Text == "" || txtStock.Text == "" || txtWholeSale.Text == "")
+                if (txtItem.Text.Trim() == "" ||  txtRetailRate.Text == "" || txtPurchaseRate.Text == "" ||  txtStock.Text == "" || txtWholeSale.Text == "")
                     MessageBox.Show("Please enter the data");
                 else
                 {
                     DialogResult dialogResult = MessageBox.Show("Do you want to save?", "Customer Master", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        string query = "update tblItem set Item_Name='" + txtItem.Text.Trim() + "',inMalayalam='" + txtMalayalam.Text.Trim() + "',MRP='" + Convert.ToDouble(txtMRP.Text.Trim()) + "',Rate='" + Convert.ToDouble(txtRetailRate.Text.Trim()) + "',WRate='" + Convert.ToDouble(txtWholeSale.Text.Trim()) + "',PRate='" + Convert.ToDouble(txtPurchaseRate.Text) + "',minRate='" + Convert.ToDouble(txtMinRate.Text) + "',ReOrder='" + Convert.ToDouble(txtReorderLevel.Text.Trim()) + "' where itemId='" + lblID.Text.Trim() + "'";
+                        string query = "update tblItem set Item_Name='" + txtItem.Text.Trim() + "',Rate='" + Convert.ToDouble(txtRetailRate.Text.Trim()) + "',WRate='" + Convert.ToDouble(txtWholeSale.Text.Trim()) + "',PRate='" + Convert.ToDouble(txtPurchaseRate.Text) + "' where itemId='" + lblID.Text.Trim() + "'";
                         Connections.Instance.ExecuteQueries(query);
                         GridShow();
                         btnClear_Click(null, null);
@@ -165,19 +160,11 @@ namespace InMag_V._16
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtMalayalam.Focus();
+                txtRetailRate.Focus();
             }
 
         }
-        private void txtMalayalam_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                txtMRP.Focus();
-
-            }
-
-        }
+        
         private void txtMRP_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
@@ -190,31 +177,32 @@ namespace InMag_V._16
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtWholeSale.Focus();
+                txtPurchaseRate.Focus();
             }
 
+        }
+        private void txtItemCode_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyData == Keys.Enter)
+            {
+                txtItem.Focus();
+            }
         }
         private void txtWholeSale_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtPurchaseRate.Focus();
+                txtStock.Focus();
             }
         }
         private void txtPurchaseRate_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)
             {
-                txtMinRate.Focus();
+                txtWholeSale.Focus();
             }
         }
-        private void txtMinRate_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.KeyData == Keys.Enter)
-            {
-                txtReorderLevel.Focus();
-            }
-        }
+        
         private void txtReorderLevel_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyData == Keys.Enter)

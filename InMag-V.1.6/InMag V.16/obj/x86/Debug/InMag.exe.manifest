@@ -148,14 +148,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="InMag.exe" size="1133056">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="InMag.exe" size="1128960">
       <assemblyIdentity name="InMag" version="1.0.0.0" language="neutral" processorArchitecture="x86" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-        <dsig:DigestValue>fFSP1reNQd6NTmVyUQXLz9j75EU=</dsig:DigestValue>
+        <dsig:DigestValue>dkDOL0bm+GP076FAOuqLNAZwpv4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
