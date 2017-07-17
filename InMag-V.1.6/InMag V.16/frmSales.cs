@@ -68,7 +68,6 @@ namespace InMag_V._16
         {
             ds = new DataSet1();
             comboLoad();
-            cboRategroup.SelectedIndex = 0;
             txtItemcode.Tag = null;
             SetBillNo();
             SearchGridLoad();
@@ -177,10 +176,7 @@ namespace InMag_V._16
                 if (txtItemcode.Text.Trim() != "")
                 {
                     string query = "select itemId,Rate from tblItem where item_Code='" + txtItemcode.Text.Trim() + "'";
-                    if (cboRategroup.Text == "Wholesale Price")
-                    {
-                        query = "select itemId,WRate from tblItem where item_Code='" + txtItemcode.Text.Trim() + "'";
-                    }
+                    
                     DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
                     if (dt.Rows.Count > 0)
                     {
@@ -430,11 +426,7 @@ namespace InMag_V._16
             {
                 for (int i = 0; i < ItemGrid.Rows.Count; i++)
                 {
-                    string query = "";
-                    if (cboRategroup.Text == "Retail Price")
-                        query = "select rate from tblItem where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
-                    else if (cboRategroup.Text == "Wholesale Price")
-                        query = "select wrate from tblItem where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
+                    string query = "select rate from tblItem where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
                     DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
                     query = "update tblTemp set rate='" + Convert.ToDouble(dt.Rows[0][0].ToString()) + "',Total='" + Convert.ToDouble(dt.Rows[0][0].ToString()) * Convert.ToDouble(ItemGrid.Rows[i].Cells[4].Value) + "' where itemId='" + ItemGrid.Rows[i].Cells[2].Value + "'";
                     Connections.Instance.ExecuteQueries(query);
@@ -605,11 +597,30 @@ namespace InMag_V._16
                         //ds.Tables["Bill"].Clear();
                         //ds.Tables["Bill"].Merge(dt);
 
-                        //ReportDocument cryRpt = new ReportDocument();
-                        //cryRpt.Load(System.IO.Path.GetDirectoryName(Application.ExecutablePath).ToString() + @"\Reports\rptBill.rpt");
-                        //cryRpt.SetDataSource(ds);
-                        //cryRpt.Refresh();
-                        //cryRpt.PrintToPrinter(1, true, 0, 0);
+                        ReportDocument cryRpt = new ReportDocument();
+                        cryRpt.Load(System.IO.Path.GetDirectoryName(Application.ExecutablePath).ToString() + @"\Reports\GSTBIll.rpt");
+                        cryRpt.DataDefinition.FormulaFields[1].Text = "'"+ txtBillno.Text +"'";
+                        cryRpt.DataDefinition.FormulaFields[2].Text = "'" + DatePicker.Value + "'";
+                        cryRpt.DataDefinition.FormulaFields[3].Text = "'" + txtState.Text  + "'";
+                        cryRpt.DataDefinition.FormulaFields[4].Text = "'" + txtStateCode.Text  + "'";
+                        cryRpt.DataDefinition.FormulaFields[5].Text = "'" + cboCustomer.Text + "'";
+                        string addd = txtAddress.Text.Replace("\r", string.Empty).Replace("\n", "^");
+                        cryRpt.DataDefinition.FormulaFields[6].Text = "'" + addd + "'";
+                        cryRpt.DataDefinition.FormulaFields[7].Text = "'" + txtGST.Text + "'";
+                        cryRpt.DataDefinition.FormulaFields[8].Text = "'" + txtVehicle.Text  + "'";
+                        cryRpt.DataDefinition.FormulaFields[9].Text = "'" + txtBillTotal.Text  + "'";
+                        cryRpt.DataDefinition.FormulaFields[10].Text = "'" + txtSGST.Text + "'";
+                        cryRpt.DataDefinition.FormulaFields[11].Text = "'" + txtIGST.Text + "'";
+                        double gst = Convert.ToDouble(txtCGST.Text) + Convert.ToDouble(txtSGST.Text) + Convert.ToDouble(txtIGST.Text);
+                        cryRpt.DataDefinition.FormulaFields[12].Text = "'" + gst + "'";
+                        cryRpt.DataDefinition.FormulaFields[13].Text = "'" + txtIGST.Text + "'";
+                        cryRpt.DataDefinition.FormulaFields[14].Text = "'" + txtGrandTotal.Text + "'";
+                        cryRpt.DataDefinition.FormulaFields[15].Text = "'" + txtCGST.Text + "'";
+                        //cryRpt.DataDefinition.FormulaFields[16].Text = "'" + ConvertNumbertoWords(Convert.ToInt64(txtGrandTotal.Text)) + "'";
+
+                        cryRpt.SetDataSource(ds);
+                        cryRpt.Refresh();
+                        cryRpt.PrintToPrinter(1, true, 0, 0);
                     }
 
                     query = "truncate table tblTemp";
@@ -619,6 +630,52 @@ namespace InMag_V._16
                     //}
                 }
             }
+        }
+
+        public string ConvertNumbertoWords(long number)
+        {
+            if (number == 0) return "ZERO";
+            if (number < 0) return "minus " + ConvertNumbertoWords(Math.Abs(number));
+            string words = "";
+            if ((number / 1000000) > 0)
+            {
+                words += ConvertNumbertoWords(number / 100000) + " LAKES ";
+                number %= 1000000;
+            }
+            if ((number / 1000) > 0)
+            {
+                words += ConvertNumbertoWords(number / 1000) + " THOUSAND ";
+                number %= 1000;
+            }
+            if ((number / 100) > 0)
+            {
+                words += ConvertNumbertoWords(number / 100) + " HUNDRED ";
+                number %= 100;
+            }
+            //if ((number / 10) > 0)  
+            //{  
+            // words += ConvertNumbertoWords(number / 10) + " RUPEES ";  
+            // number %= 10;  
+            //}  
+            if (number > 0)
+            {
+                if (words != "") words += "AND ";
+                var unitsMap = new[]   
+        {  
+            "ZERO", "ONE", "TWO", "THREE", "FOUR", "FIVE", "SIX", "SEVEN", "EIGHT", "NINE", "TEN", "ELEVEN", "TWELVE", "THIRTEEN", "FOURTEEN", "FIFTEEN", "SIXTEEN", "SEVENTEEN", "EIGHTEEN", "NINETEEN"  
+        };
+                var tensMap = new[]   
+        {  
+            "ZERO", "TEN", "TWENTY", "THIRTY", "FORTY", "FIFTY", "SIXTY", "SEVENTY", "EIGHTY", "NINETY"  
+        };
+                if (number < 20) words += unitsMap[number];
+                else
+                {
+                    words += tensMap[number / 10];
+                    if ((number % 10) > 0) words += " " + unitsMap[number % 10];
+                }
+            }
+            return words;
         }
         private void btnDelete_Click(object sender, EventArgs e)
         {
@@ -698,8 +755,6 @@ namespace InMag_V._16
                     txtItems.Tag = ItemDisplayGrid.Rows[0].Cells[0].Value.ToString();
                     txtItemcode.Text = ItemDisplayGrid.Rows[0].Cells[1].Value.ToString();
                     txtRate.Text = ItemDisplayGrid.Rows[0].Cells[3].Value.ToString();
-                    if (cboRategroup.Text == "Wholesale Price")
-                        txtRate.Text = ItemDisplayGrid.Rows[0].Cells[4].Value.ToString();
                     itemView.Visible = false;
                     txtQuantity.Focus();
                     txtItems.Text = ItemDisplayGrid.Rows[0].Cells[2].Value.ToString();
@@ -742,8 +797,6 @@ namespace InMag_V._16
                 txtItems.Tag = ItemDisplayGrid.Rows[r].Cells[0].Value.ToString();
                 txtItemcode.Text = ItemDisplayGrid.Rows[r].Cells[1].Value.ToString();
                 txtRate.Text = ItemDisplayGrid.Rows[r].Cells[3].Value.ToString();
-                if (cboRategroup.Text == "Wholesale Price")
-                    txtRate.Text = ItemDisplayGrid.Rows[r].Cells[4].Value.ToString();
                 txtQuantity.Focus();
                 txtItems.Text = ItemDisplayGrid.Rows[r].Cells[2].Value.ToString();
                 itemView.Visible = false;
@@ -762,8 +815,6 @@ namespace InMag_V._16
                 txtItems.Tag = ItemDisplayGrid.Rows[r].Cells[0].Value.ToString();
                 txtItemcode.Text = ItemDisplayGrid.Rows[r].Cells[1].Value.ToString();
                 txtRate.Text = ItemDisplayGrid.Rows[r].Cells[3].Value.ToString();
-                if (cboRategroup.Text == "Wholesale Price")
-                    txtRate.Text = ItemDisplayGrid.Rows[r].Cells[4].Value.ToString();
                 txtQuantity.Focus();
                 txtItems.Text = ItemDisplayGrid.Rows[r].Cells[2].Value.ToString();
                 itemView.Visible = false;

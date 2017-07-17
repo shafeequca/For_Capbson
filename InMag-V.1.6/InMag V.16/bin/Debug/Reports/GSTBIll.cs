@@ -16,14 +16,14 @@ namespace InMag_V._16.Reports {
     using CrystalDecisions.CrystalReports.Engine;
     
     
-    public class rptBill : ReportClass {
+    public class GSTBIll : ReportClass {
         
-        public rptBill() {
+        public GSTBIll() {
         }
         
         public override string ResourceName {
             get {
-                return "rptBill.rpt";
+                return "GSTBIll.rpt";
             }
             set {
                 // Do nothing
@@ -41,7 +41,7 @@ namespace InMag_V._16.Reports {
         
         public override string FullResourceName {
             get {
-                return "InMag_V._16.Reports.rptBill.rpt";
+                return "InMag_V._16.Reports.GSTBIll.rpt";
             }
             set {
                 // Do nothing
@@ -50,7 +50,7 @@ namespace InMag_V._16.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section1 {
+        public CrystalDecisions.CrystalReports.Engine.Section ReportHeaderSection1 {
             get {
                 return this.ReportDefinition.Sections[0];
             }
@@ -58,7 +58,7 @@ namespace InMag_V._16.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section2 {
+        public CrystalDecisions.CrystalReports.Engine.Section PageHeaderSection1 {
             get {
                 return this.ReportDefinition.Sections[1];
             }
@@ -66,7 +66,7 @@ namespace InMag_V._16.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section3 {
+        public CrystalDecisions.CrystalReports.Engine.Section DetailSection1 {
             get {
                 return this.ReportDefinition.Sections[2];
             }
@@ -74,7 +74,7 @@ namespace InMag_V._16.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section4 {
+        public CrystalDecisions.CrystalReports.Engine.Section ReportFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[3];
             }
@@ -82,7 +82,7 @@ namespace InMag_V._16.Reports {
         
         [Browsable(false)]
         [DesignerSerializationVisibilityAttribute(System.ComponentModel.DesignerSerializationVisibility.Hidden)]
-        public CrystalDecisions.CrystalReports.Engine.Section Section5 {
+        public CrystalDecisions.CrystalReports.Engine.Section PageFooterSection1 {
             get {
                 return this.ReportDefinition.Sections[4];
             }
@@ -90,9 +90,9 @@ namespace InMag_V._16.Reports {
     }
     
     [System.Drawing.ToolboxBitmapAttribute(typeof(CrystalDecisions.Shared.ExportOptions), "report.bmp")]
-    public class CachedrptBill : Component, ICachedReport {
+    public class CachedGSTBIll : Component, ICachedReport {
         
-        public CachedrptBill() {
+        public CachedGSTBIll() {
         }
         
         [Browsable(false)]
@@ -129,7 +129,7 @@ namespace InMag_V._16.Reports {
         }
         
         public virtual CrystalDecisions.CrystalReports.Engine.ReportDocument CreateReport() {
-            rptBill rpt = new rptBill();
+            GSTBIll rpt = new GSTBIll();
             rpt.Site = this.Site;
             return rpt;
         }
