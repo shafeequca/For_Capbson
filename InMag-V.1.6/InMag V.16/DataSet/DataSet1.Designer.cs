@@ -1121,7 +1121,7 @@ namespace InMag_V._16.DataSet {
             
             private global::System.Data.DataColumn columnCGSTPER;
             
-            private global::System.Data.DataColumn columnCSGT;
+            private global::System.Data.DataColumn columnCGST;
             
             private global::System.Data.DataColumn columnSGSTPER;
             
@@ -1292,9 +1292,9 @@ namespace InMag_V._16.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CSGTColumn {
+            public global::System.Data.DataColumn CGSTColumn {
                 get {
-                    return this.columnCSGT;
+                    return this.columnCGST;
                 }
             }
             
@@ -1437,7 +1437,7 @@ namespace InMag_V._16.DataSet {
                         string GSTIN, 
                         string StateCode, 
                         decimal CGSTPER, 
-                        decimal CSGT, 
+                        decimal CGST, 
                         decimal SGSTPER, 
                         decimal SGST, 
                         decimal IGSTPER, 
@@ -1465,7 +1465,7 @@ namespace InMag_V._16.DataSet {
                         GSTIN,
                         StateCode,
                         CGSTPER,
-                        CSGT,
+                        CGST,
                         SGSTPER,
                         SGST,
                         IGSTPER,
@@ -1513,7 +1513,7 @@ namespace InMag_V._16.DataSet {
                 this.columnGSTIN = base.Columns["GSTIN"];
                 this.columnStateCode = base.Columns["StateCode"];
                 this.columnCGSTPER = base.Columns["CGSTPER"];
-                this.columnCSGT = base.Columns["CSGT"];
+                this.columnCGST = base.Columns["CGST"];
                 this.columnSGSTPER = base.Columns["SGSTPER"];
                 this.columnSGST = base.Columns["SGST"];
                 this.columnIGSTPER = base.Columns["IGSTPER"];
@@ -1558,8 +1558,8 @@ namespace InMag_V._16.DataSet {
                 base.Columns.Add(this.columnStateCode);
                 this.columnCGSTPER = new global::System.Data.DataColumn("CGSTPER", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnCGSTPER);
-                this.columnCSGT = new global::System.Data.DataColumn("CSGT", typeof(decimal), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCSGT);
+                this.columnCGST = new global::System.Data.DataColumn("CGST", typeof(decimal), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCGST);
                 this.columnSGSTPER = new global::System.Data.DataColumn("SGSTPER", typeof(decimal), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnSGSTPER);
                 this.columnSGST = new global::System.Data.DataColumn("SGST", typeof(decimal), null, global::System.Data.MappingType.Element);
@@ -2747,17 +2747,17 @@ namespace InMag_V._16.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public decimal CSGT {
+            public decimal CGST {
                 get {
                     try {
-                        return ((decimal)(this[this.tableBill.CSGTColumn]));
+                        return ((decimal)(this[this.tableBill.CGSTColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CSGT\' in table \'Bill\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'CGST\' in table \'Bill\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableBill.CSGTColumn] = value;
+                    this[this.tableBill.CGSTColumn] = value;
                 }
             }
             
@@ -3107,14 +3107,14 @@ namespace InMag_V._16.DataSet {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsCSGTNull() {
-                return this.IsNull(this.tableBill.CSGTColumn);
+            public bool IsCGSTNull() {
+                return this.IsNull(this.tableBill.CGSTColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetCSGTNull() {
-                this[this.tableBill.CSGTColumn] = global::System.Convert.DBNull;
+            public void SetCGSTNull() {
+                this[this.tableBill.CGSTColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]

@@ -51,9 +51,17 @@ namespace InMag_V._16
         }
         private void NumberOnly_KeyPress(object sender, KeyPressEventArgs e)
         {
+            TextBox tb = sender as TextBox;
+
             if (!(e.KeyChar == 8 || e.KeyChar == 46 || e.KeyChar == 13 || (e.KeyChar >= 48 && e.KeyChar <= 57)))
                 e.Handled = true;
-            TextBox tb=sender as TextBox;
+            else
+            {
+                if (e.KeyChar == 46 && tb.Text.Contains("."))
+                {
+                    e.Handled = true;
+                }
+            }
             if (e.KeyChar == 13)
             {
                 if (tb.Name == "txtCash")
@@ -100,7 +108,7 @@ namespace InMag_V._16
                     condition = "s.BillNo='" + txtBillNoSearch.Text + "'";
                 else if (cboCustomerSearch.SelectedIndex != -1 && cboCustomerSearch.Text !="")
                     condition = "(s.BillDate>='" + DtFrom.Value.ToString("dd-MMM-yyyy") + "' and s.BillDate<='" + DtTo.Value.ToString("dd-MMM-yyyy") + "' and s.custId='" + cboCustomerSearch.SelectedValue + "') " + chCondition;
-                string query = "select s.saleId,s.BillNo as Bill_No,CONVERT(VARCHAR(11),s.BillDate,106) as Bill_Date,c.Customer,s.custId,s.BillTotal,s.CGSTPer,s.CGST,s.SGSTPer,s.SGST,s.IGSTPer,s.IGST,s.GrandTotal from tblSales s,tblCustomer c where s.custId=c.Custid  and " + condition;
+                string query = "select s.saleId,s.BillNo as Bill_No,CONVERT(VARCHAR(11),s.BillDate,106) as Bill_Date,c.Customer,s.custId,s.BillTotal,s.CGSTPer,s.CGST,s.SGSTPer,s.SGST,s.IGSTPer,s.IGST,s.GrandTotal,s.vehicleno from tblSales s,tblCustomer c where s.custId=c.Custid  and " + condition;
                 SearchGrid.DataSource = Connections.Instance.ShowDataInGridView(query);
                 SearchGrid.Columns[0].Visible = false;
                 SearchGrid.Columns[1].Width = 60;
@@ -117,6 +125,7 @@ namespace InMag_V._16
                 SearchGrid.Columns[11].Visible = false;
                 SearchGrid.Columns[12].Visible = false;
                 SearchGrid.Columns[13].Visible = false;
+                SearchGrid.Columns[14].Visible = false;
             }
             catch { }
         }
@@ -448,6 +457,7 @@ namespace InMag_V._16
             txtBillTotal.Text = "0";
             txtCGSTPer.Text = "0";
             txtIGSTPer.Text = "0";
+            txtVehicle.Text = "";
             txtState.Text = "";
             txtStateCode.Text = "";
             txtGST.Text = "";
@@ -494,7 +504,7 @@ namespace InMag_V._16
                 txtIGSTPer.Text = SearchGrid.Rows[e.RowIndex].Cells[10].Value.ToString();
                 txtIGST.Text = SearchGrid.Rows[e.RowIndex].Cells[11].Value.ToString();
                 txtGrandTotal.Text = SearchGrid.Rows[e.RowIndex].Cells[12].Value.ToString();
-
+                txtVehicle.Text = SearchGrid.Rows[e.RowIndex].Cells[13].Value.ToString();
                 cboCustomer.Enabled = false;
                 string query = "truncate table tblTemp";
                 Connections.Instance.ExecuteQueries(query);
@@ -522,7 +532,7 @@ namespace InMag_V._16
                     string query = "";
                     if (txtBillno.Tag == null)
                     {
-                        query = "insert into tblSales values('" + txtBillno.Text + "','" + DatePicker.Value.ToString("dd-MMM-yyyy") + "','" + cboCustomer.SelectedValue + "','" + Convert.ToDouble(txtBillTotal.Text) + "','" + Convert.ToDouble(txtCGSTPer.Text) + "','" + Convert.ToDouble(txtCGST.Text) + "','" + Convert.ToDouble(txtSGSTPer.Text) + "','" + Convert.ToDouble(txtSGST.Text) + "','" + Convert.ToDouble(txtIGSTPer.Text) + "','" + Convert.ToDouble(txtIGST.Text) + "','" + Convert.ToDouble(txtGrandTotal.Text) + "','" + Convert.ToDouble(txtGrandTotal.Text) + "')";
+                        query = "insert into tblSales values('" + txtBillno.Text + "','" + DatePicker.Value.ToString("dd-MMM-yyyy") + "','" + cboCustomer.SelectedValue + "','" + Convert.ToDouble(txtBillTotal.Text) + "','" + Convert.ToDouble(txtCGSTPer.Text) + "','" + Convert.ToDouble(txtCGST.Text) + "','" + Convert.ToDouble(txtSGSTPer.Text) + "','" + Convert.ToDouble(txtSGST.Text) + "','" + Convert.ToDouble(txtIGSTPer.Text) + "','" + Convert.ToDouble(txtIGST.Text) + "','" + Convert.ToDouble(txtGrandTotal.Text) + "','" + Convert.ToDouble(txtGrandTotal.Text) + "'),'"+ txtVehicle.Text +"'";
                         Connections.Instance.ExecuteQueries(query);
                         query = "select ident_current('tblSales')";
                         DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query);
@@ -541,7 +551,7 @@ namespace InMag_V._16
                     else
                     {
                         //update
-                        query = "update tblSales set BillDate='" + DatePicker.Value.ToString("dd-MMM-yyyy") + "',GrandTotal='" + Convert.ToDouble(txtGrandTotal.Text) + "',Cash='" + Convert.ToDouble(txtGrandTotal.Text) + "',BillTotal='" + Convert.ToDouble(txtBillTotal.Text) + "',CGSTPer='" + Convert.ToDouble(txtCGSTPer.Text) + "',CGST='" + Convert.ToDouble(txtCGST.Text) + "',SGSTPer='" + Convert.ToDouble(txtSGSTPer.Text) + "',SGST='" + Convert.ToDouble(txtSGST.Text) + "',IGSTPer='" + Convert.ToDouble(txtIGSTPer.Text) + "',IGST='" + Convert.ToDouble(txtIGST.Text) + "'  where saleId='" + txtBillno.Tag.ToString() + "'";
+                        query = "update tblSales set BillDate='" + DatePicker.Value.ToString("dd-MMM-yyyy") + "',GrandTotal='" + Convert.ToDouble(txtGrandTotal.Text) + "',Cash='" + Convert.ToDouble(txtGrandTotal.Text) + "',BillTotal='" + Convert.ToDouble(txtBillTotal.Text) + "',CGSTPer='" + Convert.ToDouble(txtCGSTPer.Text) + "',CGST='" + Convert.ToDouble(txtCGST.Text) + "',SGSTPer='" + Convert.ToDouble(txtSGSTPer.Text) + "',SGST='" + Convert.ToDouble(txtSGST.Text) + "',IGSTPer='" + Convert.ToDouble(txtIGSTPer.Text) + "',IGST='" + Convert.ToDouble(txtIGST.Text) + "',vehicleno='"+ txtVehicle.Text +"'  where saleId='" + txtBillno.Tag.ToString() + "'";
                         Connections.Instance.ExecuteQueries(query);
                         query = "select itemId,qty from tblSaletrans where saleId='" + txtBillno.Tag.ToString() + "'";
                        
@@ -565,42 +575,26 @@ namespace InMag_V._16
                     dialogResult = MessageBox.Show("Do you want to print this bill?", "Sale Voucher", MessageBoxButtons.YesNo);
                     if (dialogResult == DialogResult.Yes)
                     {
-                        //string query1 = "select i.inMalayalam as ItemsInMalayalam,t.ItemName as Items,t.Qty as Qty,t.Rate as Rate,t.Total as Total from tblTemp t,tblItem i where t.ItemId=i.ItemId";
-                        //System.Data.DataColumn BillNo = new System.Data.DataColumn("BillNo", typeof(System.String));
-                        //BillNo.DefaultValue = txtBillno.Text;
-                        //System.Data.DataColumn BillDate = new System.Data.DataColumn("BillDate", typeof(System.String));
-                        //BillDate.DefaultValue = DatePicker.Value.ToString("dd-MMM-yyyy");
-                        //System.Data.DataColumn Customer = new System.Data.DataColumn("Customer", typeof(System.String));
-                        //Customer.DefaultValue = cboCustomer.Text.ToString();
-                        //System.Data.DataColumn GrandTotal = new System.Data.DataColumn("GrandTotal", typeof(System.Decimal));
-                        //GrandTotal.DefaultValue = txtBillTotal.Text;
-                        //System.Data.DataColumn Cash = new System.Data.DataColumn("Cash", typeof(System.Decimal));
-                        //Cash.DefaultValue = txtCGST.Text;
-                        //System.Data.DataColumn Discount = new System.Data.DataColumn("Discount", typeof(System.Decimal));
-                        //Discount.DefaultValue = txtSGST.Text;
-                        //System.Data.DataColumn Balance = new System.Data.DataColumn("Balance", typeof(System.Decimal));
-                        //Balance.DefaultValue = txtIGST.Text;
-                        //System.Data.DataColumn PrevBalance = new System.Data.DataColumn("PrevBalance", typeof(System.Decimal));
-                        //PrevBalance.DefaultValue = txtCGSTPer.Text;
-
-                        //DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query1);
-
-                        //dt.Columns.Add(PrevBalance);
-                        //dt.Columns.Add(Balance);
-                        //dt.Columns.Add(Discount);
-
-                        //dt.Columns.Add(Cash);
-                        //dt.Columns.Add(GrandTotal);
-                        //dt.Columns.Add(Customer);
-                        //dt.Columns.Add(BillDate);
-                        //dt.Columns.Add(BillNo);
-                        //ds.Tables["Bill"].Clear();
-                        //ds.Tables["Bill"].Merge(dt);
+                        string query1 = "select t.ItemName as Items,t.Qty as Qty,t.Rate as Rate,t.Total as Total," + txtCGSTPer.Text + " as CGSTPER,t.Total * " + txtCGSTPer.Text + "/100 AS CGST," + txtSGSTPer.Text + " as SGSTPER,t.Total * " + txtSGSTPer.Text + "/100 AS SGST," + txtIGSTPer.Text + " as IGSTPER,t.Total * " + txtIGSTPer.Text + "/100 AS IGST, (t.Total * " + txtCGSTPer.Text + "/100)+(t.Total * " + txtSGSTPer.Text + "/100)+(t.Total * " + txtIGSTPer.Text + "/100) AS GSTTotal from tblTemp t,tblItem i where t.ItemId=i.ItemId";
+                        DataTable dt = (DataTable)Connections.Instance.ShowDataInGridView(query1);
+                        DataTable dtCloned = dt.Clone();
+                        dtCloned.Columns[4].DataType = typeof(Decimal);
+                        dtCloned.Columns[5].DataType = typeof(Decimal);
+                        dtCloned.Columns[6].DataType = typeof(Decimal);
+                        dtCloned.Columns[7].DataType = typeof(Decimal);
+                        dtCloned.Columns[8].DataType = typeof(Decimal);
+                        dtCloned.Columns[9].DataType = typeof(Decimal);
+                        foreach (DataRow row in dt.Rows)
+                        {
+                            dtCloned.ImportRow(row);
+                        }
+                        ds.Tables["Bill"].Clear();
+                        ds.Tables["Bill"].Merge(dtCloned);
 
                         ReportDocument cryRpt = new ReportDocument();
                         cryRpt.Load(System.IO.Path.GetDirectoryName(Application.ExecutablePath).ToString() + @"\Reports\GSTBIll.rpt");
                         cryRpt.DataDefinition.FormulaFields[1].Text = "'"+ txtBillno.Text +"'";
-                        cryRpt.DataDefinition.FormulaFields[2].Text = "'" + DatePicker.Value + "'";
+                        cryRpt.DataDefinition.FormulaFields[2].Text = "'" + DatePicker.Value.ToString("dd-MM-yyyy") + "'";
                         cryRpt.DataDefinition.FormulaFields[3].Text = "'" + txtState.Text  + "'";
                         cryRpt.DataDefinition.FormulaFields[4].Text = "'" + txtStateCode.Text  + "'";
                         cryRpt.DataDefinition.FormulaFields[5].Text = "'" + cboCustomer.Text + "'";
@@ -613,9 +607,9 @@ namespace InMag_V._16
                         cryRpt.DataDefinition.FormulaFields[11].Text = "'" + txtIGST.Text + "'";
                         double gst = Convert.ToDouble(txtCGST.Text) + Convert.ToDouble(txtSGST.Text) + Convert.ToDouble(txtIGST.Text);
                         cryRpt.DataDefinition.FormulaFields[12].Text = "'" + gst + "'";
-                        cryRpt.DataDefinition.FormulaFields[13].Text = "'" + txtIGST.Text + "'";
-                        cryRpt.DataDefinition.FormulaFields[14].Text = "'" + txtGrandTotal.Text + "'";
-                        cryRpt.DataDefinition.FormulaFields[15].Text = "'" + txtCGST.Text + "'";
+                        cryRpt.DataDefinition.FormulaFields[13].Text = "'" + txtGrandTotal.Text + "'";
+                        cryRpt.DataDefinition.FormulaFields[14].Text = "'" + txtCGST.Text + "'";
+                        
                         //cryRpt.DataDefinition.FormulaFields[16].Text = "'" + ConvertNumbertoWords(Convert.ToInt64(txtGrandTotal.Text)) + "'";
 
                         cryRpt.SetDataSource(ds);
